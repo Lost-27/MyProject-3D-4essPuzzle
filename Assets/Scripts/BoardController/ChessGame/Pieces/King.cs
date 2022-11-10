@@ -96,9 +96,9 @@ public class King : Piece
         return null;
     }
 
-    public void MovePiece(Vector2Int coords)//,Action competedCallback = null)
+    public override void MovePiece(Vector2Int coords,Action competedCallback = null)
     {
-        base.MovePiece(coords);
+        base.MovePiece(coords,competedCallback);
         if (coords == _leftCastlingMove)
         {
             board.UpdateBoardOnPieceMove(coords + Vector2Int.right, _leftRook.occupiedSquare, _leftRook, null);

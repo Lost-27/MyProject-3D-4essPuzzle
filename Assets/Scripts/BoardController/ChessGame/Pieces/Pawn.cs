@@ -43,9 +43,9 @@ public class Pawn : Piece
         return availableMoves;
     }
     
-    public void MovePiece(Vector2Int coords)//,Action competedCallback = null)
+    public override void MovePiece (Vector2Int coords,Action competedCallback = null)
     {
-        base.MovePiece(coords,null);
+        base.MovePiece(coords,competedCallback);
         CheckPromotion();
     }
     

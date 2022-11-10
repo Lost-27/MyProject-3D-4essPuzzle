@@ -60423,7 +60423,7 @@ PrefabInstance:
     - target: {fileID: 3164626443298101365, guid: 18c3250e07059e94a8d43c1cd12de344, type: 3}
       propertyPath: _startingBoardLayout
       value: 
-      objectReference: {fileID: 11400000, guid: 96fb370917b31e946900bf1b5fa4e14d, type: 2}
+      objectReference: {fileID: 11400000, guid: 9dfe54510b811ee44aa89d838a16807a, type: 2}
     - target: {fileID: 3591448817544007034, guid: 18c3250e07059e94a8d43c1cd12de344, type: 3}
       propertyPath: m_RootOrder
       value: 0
