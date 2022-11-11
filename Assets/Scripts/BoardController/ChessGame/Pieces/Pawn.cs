@@ -45,8 +45,12 @@ public class Pawn : Piece
     
     public override void MovePiece (Vector2Int coords,Action competedCallback = null)
     {
-        base.MovePiece(coords,competedCallback);
-        CheckPromotion();
+        base.MovePiece(coords,() =>
+        {
+            CheckPromotion();
+            competedCallback?.Invoke();
+        });
+        
     }
     
     private void CheckPromotion()
