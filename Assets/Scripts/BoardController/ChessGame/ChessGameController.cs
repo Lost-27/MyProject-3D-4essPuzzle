@@ -13,15 +13,18 @@ public class ChessGameController : MonoBehaviour
     }
 
     [SerializeField] private BoardLayout _startingBoardLayout;
-
     [SerializeField] private Board _board;
+    [SerializeField] private EndGameType _endGameType;
+
+    private IEndGameChecker _gameChecker;
+
+    [SerializeField] private Piece[] _piece;
     // [SerializeField] private ChessUIManager _uiManager;
 
     private PiecesCreator _pieceCreator;
     private ChessPlayer _whitePlayer;
     private ChessPlayer _blackPlayer;
-    private ChessPlayer _activePlayer;
-
+    public ChessPlayer _activePlayer;
     private GameState _state;
 
     public event Action OnGameEnd;
@@ -77,10 +80,12 @@ public class ChessGameController : MonoBehaviour
     {
         GenerateAllPossiblePlayerMoves(_activePlayer);
         GenerateAllPossiblePlayerMoves(GetOpponentToPlayer(_activePlayer));
-        if (CheckIfGameIsFinished())
+
+        if (_gameChecker.IsFinished())
         {
             EndGame();
         }
+        
         else
         {
             // RestartGame();
@@ -103,12 +108,18 @@ public class ChessGameController : MonoBehaviour
     private void StartNewGame()
     {
         SetGameState(GameState.Init);
+        // EndGameCheckerFactory _gameCheckerFactory = new EndGameCheckerFactory(this,_piece);
+        // _gameChecker =  _gameCheckerFactory.Create(_endGameType);
         // _uiManager.HideUI();
         _board.SetDependencies(this);
         CreatePiecesFromLayout(_startingBoardLayout);
         _activePlayer = _whitePlayer;
         GenerateAllPossiblePlayerMoves(_activePlayer);
         SetGameState(GameState.Play);
+        
+        _piece = FindObjectsOfType<Piece>();
+        EndGameCheckerFactory _gameCheckerFactory = new EndGameCheckerFactory(this,_piece);
+        _gameChecker =  _gameCheckerFactory.Create(_endGameType);
     }
 
 
@@ -142,7 +153,7 @@ public class ChessGameController : MonoBehaviour
         StartNewGame();
     }
 
-    private ChessPlayer GetOpponentToPlayer(ChessPlayer player)
+    public ChessPlayer GetOpponentToPlayer(ChessPlayer player)
     {
         return player == _whitePlayer ? _blackPlayer : _whitePlayer;
     }
@@ -168,27 +179,6 @@ public class ChessGameController : MonoBehaviour
         _state = state;
     }
 
-
-    private bool CheckIfGameIsFinished()
-    {
-        Piece[] kingAttackingPieces = _activePlayer.GetPieceAttackingOppositePieceOfType<King>();
-        if (kingAttackingPieces.Length > 0)
-        {
-            ChessPlayer oppositePlayer = GetOpponentToPlayer(_activePlayer);
-            Piece attackedKing = oppositePlayer.GetPiecesOfType<King>().FirstOrDefault();
-            oppositePlayer.RemoveMovesEnablingAttackOnPieceOfType<King>(_activePlayer, attackedKing);
-
-            int availableKingMoves = attackedKing.availableMoves.Count;
-            if (availableKingMoves == 0)
-            {
-                bool canCoverKing = oppositePlayer.CanHidePieceFromAttack<King>(_activePlayer);
-                if (!canCoverKing)
-                    return true;
-            }
-        }
-
-        return false;
-    }
 
     private void DestroyPieces()
     {
