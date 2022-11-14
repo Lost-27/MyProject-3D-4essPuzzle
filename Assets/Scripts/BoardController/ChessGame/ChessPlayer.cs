@@ -52,7 +52,7 @@ public class ChessPlayer
         List<Vector2Int> coordsToRemove = new List<Vector2Int>();
 
         coordsToRemove.Clear();
-        foreach (var coords in selectedPiece.availableMoves)
+        foreach (var coords in selectedPiece.AvailableMoves)
         {
             Piece pieceOnCoords = Board.GetPieceOnSquare(coords);
             Board.UpdateBoardOnPieceMove(coords, selectedPiece.occupiedSquare, selectedPiece, null);
@@ -64,7 +64,7 @@ public class ChessPlayer
 
         foreach (var coords in coordsToRemove)
         {
-            selectedPiece.availableMoves.Remove(coords);
+            selectedPiece.AvailableMoves.Remove(coords);
         }
     }
 
@@ -83,7 +83,7 @@ public class ChessPlayer
     {
         foreach (var piece in ActivePieces)
         {
-            foreach (var coords in piece.availableMoves)
+            foreach (var coords in piece.AvailableMoves)
             {
                 Piece pieceOnCoords = Board.GetPieceOnSquare(coords);
                 Board.UpdateBoardOnPieceMove(coords, piece.occupiedSquare, piece, null);

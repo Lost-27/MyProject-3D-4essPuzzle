@@ -17,7 +17,7 @@ public class Knight : Piece
 
     public override List<Vector2Int> SelectAvailableSquares()
     {
-        availableMoves.Clear();
+        AvailableMoves.Clear();
 
         for (int i = 0; i < _offsets.Length; i++)
         {
@@ -29,6 +29,6 @@ public class Knight : Piece
                 TryToAddMove(nextCoords);
         }
 
-        return availableMoves;
+        return AvailableMoves;
     }
 }

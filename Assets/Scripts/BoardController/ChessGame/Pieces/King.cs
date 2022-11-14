@@ -24,10 +24,10 @@ public class King : Piece
 
     public override List<Vector2Int> SelectAvailableSquares()
     {
-        availableMoves.Clear();
+        AvailableMoves.Clear();
         AssignStandardMoves();
         AssignCastlingMoves();
-        return availableMoves;
+        return AvailableMoves;
     }
 
     private void AssignStandardMoves()
@@ -64,14 +64,14 @@ public class King : Piece
             if (_leftRook && !_leftRook.hasMoved)
             {
                 _leftCastlingMove = occupiedSquare + Vector2Int.left * 2;
-                availableMoves.Add(_leftCastlingMove);
+                AvailableMoves.Add(_leftCastlingMove);
             }
 
             _rightRook = GetPieceInDirection<Rook>(team, Vector2Int.right);
             if (_rightRook && !_rightRook.hasMoved)
             {
                 _rightCastlingMove = occupiedSquare + Vector2Int.right * 2;
-                availableMoves.Add(_rightCastlingMove);
+                AvailableMoves.Add(_rightCastlingMove);
             }
         }
     }

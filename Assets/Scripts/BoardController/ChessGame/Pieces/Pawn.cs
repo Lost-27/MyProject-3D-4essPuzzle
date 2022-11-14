@@ -6,7 +6,7 @@ public class Pawn : Piece
 {
     public override List<Vector2Int> SelectAvailableSquares()
     {
-        availableMoves.Clear();
+        AvailableMoves.Clear();
 
         Vector2Int direction = team == TeamColor.White ? Vector2Int.up : Vector2Int.down;
         float range = hasMoved ? 1 : 2;
@@ -40,7 +40,7 @@ public class Pawn : Piece
             }
         }
 
-        return availableMoves;
+        return AvailableMoves;
     }
     
     public override void MovePiece (Vector2Int coords,Action competedCallback = null)

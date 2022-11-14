@@ -17,7 +17,7 @@ public class Queen : Piece
 
     public override List<Vector2Int> SelectAvailableSquares()
     {
-        availableMoves.Clear();
+        AvailableMoves.Clear();
 
         float range = Board.BOARD_SIZE;
         foreach (var direction in _directions)
@@ -40,6 +40,6 @@ public class Queen : Piece
             }
         }
 
-        return availableMoves;
+        return AvailableMoves;
     }
 }

@@ -20,7 +20,7 @@ public class CheckmateEndGameChecker : IEndGameChecker
             Piece attackedKing = oppositePlayer.GetPiecesOfType<King>().FirstOrDefault();
             oppositePlayer.RemoveMovesEnablingAttackOnPieceOfType<King>(activePlayer, attackedKing);
 
-            int availableKingMoves = attackedKing.availableMoves.Count;
+            int availableKingMoves = attackedKing.AvailableMoves.Count;
             if (availableKingMoves == 0)
             {
                 bool canCoverKing = oppositePlayer.CanHidePieceFromAttack<King>(activePlayer);

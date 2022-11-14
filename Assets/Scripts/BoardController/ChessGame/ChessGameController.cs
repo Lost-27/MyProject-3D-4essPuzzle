@@ -1,5 +1,4 @@
 using System;
-using System.Linq;
 using UnityEngine;
 
 [RequireComponent(typeof(PiecesCreator))]
@@ -21,7 +20,9 @@ public class ChessGameController : MonoBehaviour
     // [SerializeField] private ChessUIManager _uiManager;
 
     private PiecesCreator _pieceCreator;
+
     private ChessPlayer _whitePlayer;
+
     private ChessPlayer _blackPlayer;
     private ChessPlayer _activePlayer;
     private GameState _state;
@@ -86,7 +87,7 @@ public class ChessGameController : MonoBehaviour
         {
             EndGame();
         }
-        
+
         else
         {
             // RestartGame();
@@ -116,8 +117,8 @@ public class ChessGameController : MonoBehaviour
         GenerateAllPossiblePlayerMoves(_activePlayer);
         SetGameState(GameState.Play);
 
-        EndGameCheckerFactory _gameCheckerFactory = new EndGameCheckerFactory(this);//, _activePlayer);
-        _gameChecker =  _gameCheckerFactory.Create(_endGameType);
+        EndGameCheckerFactory gameCheckerFactory = new EndGameCheckerFactory(this);
+        _gameChecker = gameCheckerFactory.Create(_endGameType);
     }
 
 
@@ -156,6 +157,7 @@ public class ChessGameController : MonoBehaviour
         return player == _whitePlayer ? _blackPlayer : _whitePlayer;
     }
 
+
     private void ChangeActiveTeam()
     {
         _activePlayer = _activePlayer == _whitePlayer ? _blackPlayer : _whitePlayer;
@@ -164,13 +166,14 @@ public class ChessGameController : MonoBehaviour
 
     private void EndGame()
     {
-        Debug.Log("Game Ended");
+        Debug.Log("Game End");
         SetGameState(GameState.Finished);
 
         OnGameEnd?.Invoke();
         // _uiManager.OnGameFinished(_activePlayer.Team.ToString());
         DestroyPieces();
     }
+
 
     private void SetGameState(GameState state)
     {
