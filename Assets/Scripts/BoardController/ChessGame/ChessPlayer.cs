@@ -2,8 +2,38 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
+public class RealPlayer : ChessPlayer
+{
+    public RealPlayer(TeamColor team, Board board) : base(team, board)
+    {
+    }
+
+    public override void StartTurn()
+    {
+        // TODO: Input turn on
+    }
+
+    public override void EndTurn()
+    {
+        // TODO: Input turn off
+    }
+
+}
+
+public class Npc : ChessPlayer
+{
+    protected Npc(TeamColor team, Board board) : base(team, board)
+    {
+    }
+
+    public override void StartTurn()
+    {
+        // TODO: Real logic
+    }
+}
+
 [System.Serializable]
-public class ChessPlayer
+public abstract class ChessPlayer
 {
     public TeamColor Team { get; set; }
     public Board Board { get; set; }
@@ -105,4 +135,7 @@ public class ChessPlayer
     {
         ActivePieces.Clear();
     }
+
+    public abstract void StartTurn();
+    public abstract void EndTurn();
 }

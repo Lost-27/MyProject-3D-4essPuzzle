@@ -1,12 +1,17 @@
 using System.Linq;
 
-public class CheckmateEndGameChecker : IEndGameChecker
+public class CheckmateGameMode : IGameMode
 {
     private readonly ChessGameController _controller;
 
-    public CheckmateEndGameChecker(ChessGameController controller)
+    public CheckmateGameMode(ChessGameController controller)
     {
         _controller = controller;
+    }
+
+    public void Init()
+    {
+        // initizle
     }
 
     public bool IsFinished()
@@ -30,5 +35,17 @@ public class CheckmateEndGameChecker : IEndGameChecker
         }
 
         return false;
+    }
+
+    public void EndTurn()
+    {
+        if (IsFinished())
+        {
+            _controller.EndGame();
+        }
+        else
+        {
+            // _controller.Restart();
+        }
     }
 }

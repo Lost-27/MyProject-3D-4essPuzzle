@@ -5,11 +5,13 @@ using UnityEngine;
 public class BoardLayout : ScriptableObject
 {
     [Serializable]
-    private class BoardSquareSetup
+    public class BoardSquareSetup
     {
-        public Vector2Int position;
+        [SerializeField] private Vector2Int position;
         public PieceType pieceType;
         public TeamColor teamColor;
+
+        public Vector2Int Position => new(position.x - 1, position.y - 1);
     }
 
     [SerializeField] private BoardSquareSetup[] _boardSquares;
@@ -17,6 +19,17 @@ public class BoardLayout : ScriptableObject
     public int GetPiecesCount()
     {
         return _boardSquares.Length;
+    }
+    
+    public BoardSquareSetup GetSquareSetupAtIndex(int value)
+    {
+        if (_boardSquares.Length <= value)
+        {
+            Debug.LogError("Index of piece is out range");
+            return null;
+        }
+
+        return _boardSquares[value];
     }
 
     public Vector2Int GetSquareCoordsAtIndex(int index)

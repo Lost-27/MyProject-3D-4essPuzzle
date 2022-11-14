@@ -1,8 +1,8 @@
-public class PieceAtEndBoardEndGameChecker : IEndGameChecker
+public class PieceAtBoardGameMode : IGameMode
 {
     private readonly ChessGameController _controller;
 
-    public PieceAtEndBoardEndGameChecker(ChessGameController controller)
+    public PieceAtBoardGameMode(ChessGameController controller)
     {
         _controller = controller;
     }
@@ -19,5 +19,17 @@ public class PieceAtEndBoardEndGameChecker : IEndGameChecker
         }
 
         return false;
+    }
+    
+    public void EndTurn()
+    {
+        if (IsFinished())
+        {
+            _controller.EndGame();
+        }
+        else
+        {
+            _controller.EndEndTurn();
+        }
     }
 }

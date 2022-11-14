@@ -7,14 +7,14 @@ public class EndGameCheckerFactory
         _controller = controller;
     }
 
-    public IEndGameChecker Create(EndGameType type)
+    public IGameMode Create(EndGameType type)
     {
         switch (type)
         {
             case EndGameType.Checkmate:
-                return new CheckmateEndGameChecker(_controller);
+                return new CheckmateGameMode(_controller);
             case EndGameType.PieceAtEndBoard:
-                return new PieceAtEndBoardEndGameChecker(_controller);
+                return new PieceAtBoardGameMode(_controller);
             default:
                 return null;
         }

@@ -15,7 +15,7 @@ public class ChessGameController : MonoBehaviour
     [SerializeField] private Board _board;
     [SerializeField] private EndGameType _endGameType;
 
-    private IEndGameChecker _gameChecker;
+    private IGameMode _gameMode;
 
     // [SerializeField] private ChessUIManager _uiManager;
 
@@ -33,13 +33,12 @@ public class ChessGameController : MonoBehaviour
 
     private void Awake()
     {
-        SetDependencies();
-        CreatePlayers();
+        
     }
 
     private void Start()
     {
-        StartNewGame();
+        Init();
     }
 
     public bool IsTeamTurnActive(TeamColor team)
@@ -66,11 +65,8 @@ public class ChessGameController : MonoBehaviour
 
     public void CreatePieceAndInitialize(Vector2Int squareCoords, TeamColor team, Type type)
     {
-        Piece newPiece = _pieceCreator.CreatePiece(type, _board.transform).GetComponent<Piece>();
+        Piece newPiece = _pieceCreator.CreatePiece(type, _board.transform);
         newPiece.SetData(squareCoords, team, _board);
-
-        Material teamMaterial = _pieceCreator.GetTeamMaterial(team);
-        newPiece.SetMaterial(teamMaterial);
 
         _board.SetPieceOnBoard(squareCoords, newPiece);
 
@@ -80,19 +76,21 @@ public class ChessGameController : MonoBehaviour
 
     public void EndTurn()
     {
+
+        BeginEndTurn();
+    }
+
+    public void BeginEndTurn()
+    {
+        _gameMode.EndTurn();
+    }
+
+    public void EndEndTurn()
+    {
         GenerateAllPossiblePlayerMoves(_activePlayer);
         GenerateAllPossiblePlayerMoves(GetOpponentToPlayer(_activePlayer));
-
-        if (_gameChecker.IsFinished())
-        {
-            EndGame();
-        }
-
-        else
-        {
-            // RestartGame();
-            ChangeActiveTeam();
-        }
+        ChangeActiveTeam();
+        _activePlayer.StartTurn();
     }
 
 
@@ -103,22 +101,25 @@ public class ChessGameController : MonoBehaviour
 
     private void CreatePlayers()
     {
-        _whitePlayer = new ChessPlayer(TeamColor.White, _board);
-        _blackPlayer = new ChessPlayer(TeamColor.Black, _board);
+        _whitePlayer = new RealPlayer(TeamColor.White, _board); // real : you
+        _blackPlayer = new ChessPlayer(TeamColor.Black, _board); // enemt TODO: Factory create
     }
 
-    private void StartNewGame()
+    private void Init()
     {
+        SetDependencies();
+        CreatePlayers();
         SetGameState(GameState.Init);
         // _uiManager.HideUI();
-        _board.SetDependencies(this);
+        _board.Init(this);
         CreatePiecesFromLayout(_startingBoardLayout);
         _activePlayer = _whitePlayer;
         GenerateAllPossiblePlayerMoves(_activePlayer);
         SetGameState(GameState.Play);
 
         EndGameCheckerFactory gameCheckerFactory = new EndGameCheckerFactory(this);
-        _gameChecker = gameCheckerFactory.Create(_endGameType);
+        _gameMode = gameCheckerFactory.Create(_endGameType);
+        _activePlayer.StartTurn();
     }
 
 
@@ -132,13 +133,14 @@ public class ChessGameController : MonoBehaviour
     {
         for (int i = 0; i < layout.GetPiecesCount(); i++)
         {
+            BoardLayout.BoardSquareSetup setup = layout.GetSquareSetupAtIndex(i);
             Vector2Int squareCoords = layout.GetSquareCoordsAtIndex(i);
             TeamColor team = layout.GetSquareTeamColorAtIndex(i);
 
             string typeName = layout.GetSquarePieceNameAtIndex(i);
             Type type = Type.GetType(typeName);
 
-            CreatePieceAndInitialize(squareCoords, team, type);
+            CreatePieceAndInitialize(setup.Position, setup.teamColor, type);
         }
     }
 
@@ -146,10 +148,11 @@ public class ChessGameController : MonoBehaviour
     private void RestartGame()
     {
         DestroyPieces();
-        _board.OnGameRestarted();
+        _board.Dispose();
+        _board.Init(this);
         _whitePlayer.OnGameRestarted();
         _blackPlayer.OnGameRestarted();
-        StartNewGame();
+        Init();
     }
 
     public ChessPlayer GetOpponentToPlayer(ChessPlayer player)
@@ -164,7 +167,7 @@ public class ChessGameController : MonoBehaviour
     }
 
 
-    private void EndGame()
+    public void EndGame()
     {
         Debug.Log("Game End");
         SetGameState(GameState.Finished);

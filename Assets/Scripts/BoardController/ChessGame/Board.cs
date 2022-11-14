@@ -18,12 +18,19 @@ public class Board : MonoBehaviour
     private void Awake()
     {
         _squareSelector = GetComponent<SquareSelectorCreator>();
+        
+    }
+
+    public void Init(ChessGameController chessController)
+    {
+        _chessController = chessController;
         CreateGrid();
     }
 
-    public void SetDependencies(ChessGameController chessController)
+    public void Dispose()
     {
-        _chessController = chessController;
+        _selectedPiece = null;
+        _grid = null;
     }
 
     public Vector3 CalculatePositionFromCoords(Vector2Int coords)
