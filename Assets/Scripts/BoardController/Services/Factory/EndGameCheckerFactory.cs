@@ -1,14 +1,12 @@
 public class EndGameCheckerFactory
 {
     private readonly ChessGameController _controller;
-    private readonly Piece[] _piece;
-    
-    public EndGameCheckerFactory(ChessGameController controller, Piece[] piece)
+
+    public EndGameCheckerFactory(ChessGameController controller)
     {
         _controller = controller;
-        _piece = piece;
     }
-    
+
     public IEndGameChecker Create(EndGameType type)
     {
         switch (type)
@@ -16,7 +14,7 @@ public class EndGameCheckerFactory
             case EndGameType.Checkmate:
                 return new CheckmateEndGameChecker(_controller);
             case EndGameType.PieceAtEndBoard:
-                return new PieceAtEndBoardEndGameChecker(_piece);
+                return new PieceAtEndBoardEndGameChecker(_controller);
             default:
                 return null;
         }

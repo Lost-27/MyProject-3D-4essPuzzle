@@ -18,14 +18,15 @@ public class ChessGameController : MonoBehaviour
 
     private IEndGameChecker _gameChecker;
 
-    [SerializeField] private Piece[] _piece;
     // [SerializeField] private ChessUIManager _uiManager;
 
     private PiecesCreator _pieceCreator;
     private ChessPlayer _whitePlayer;
     private ChessPlayer _blackPlayer;
-    public ChessPlayer _activePlayer;
+    private ChessPlayer _activePlayer;
     private GameState _state;
+
+    public ChessPlayer ActivePlayer => _activePlayer;
 
     public event Action OnGameEnd;
 
@@ -108,17 +109,14 @@ public class ChessGameController : MonoBehaviour
     private void StartNewGame()
     {
         SetGameState(GameState.Init);
-        // EndGameCheckerFactory _gameCheckerFactory = new EndGameCheckerFactory(this,_piece);
-        // _gameChecker =  _gameCheckerFactory.Create(_endGameType);
         // _uiManager.HideUI();
         _board.SetDependencies(this);
         CreatePiecesFromLayout(_startingBoardLayout);
         _activePlayer = _whitePlayer;
         GenerateAllPossiblePlayerMoves(_activePlayer);
         SetGameState(GameState.Play);
-        
-        _piece = FindObjectsOfType<Piece>();
-        EndGameCheckerFactory _gameCheckerFactory = new EndGameCheckerFactory(this,_piece);
+
+        EndGameCheckerFactory _gameCheckerFactory = new EndGameCheckerFactory(this);//, _activePlayer);
         _gameChecker =  _gameCheckerFactory.Create(_endGameType);
     }
 

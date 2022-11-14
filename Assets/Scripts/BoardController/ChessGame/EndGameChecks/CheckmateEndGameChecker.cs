@@ -11,15 +11,15 @@ public class CheckmateEndGameChecker : IEndGameChecker
 
     public bool IsFinished()
     {
-        ChessPlayer activePlayer = _controller._activePlayer;
-        
+        ChessPlayer activePlayer = _controller.ActivePlayer;
+
         Piece[] kingAttackingPieces = activePlayer.GetPieceAttackingOppositePieceOfType<King>();
         if (kingAttackingPieces.Length > 0)
         {
             ChessPlayer oppositePlayer = _controller.GetOpponentToPlayer(activePlayer);
             Piece attackedKing = oppositePlayer.GetPiecesOfType<King>().FirstOrDefault();
             oppositePlayer.RemoveMovesEnablingAttackOnPieceOfType<King>(activePlayer, attackedKing);
-        
+
             int availableKingMoves = attackedKing.availableMoves.Count;
             if (availableKingMoves == 0)
             {
@@ -28,7 +28,7 @@ public class CheckmateEndGameChecker : IEndGameChecker
                     return true;
             }
         }
-        
+
         return false;
     }
 }
